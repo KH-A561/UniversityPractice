@@ -21,8 +21,18 @@ public class SortFactoryTest {
         actual = SortFactory.getSortByType("Quick").sort(secondArr);
         Assert.assertArrayEquals(secondExpected, actual);
         actual = SortFactory.getSortByType("Insertion").sort(secondArr);
+
+        for (int anActual : secondArr) {
+            System.out.println(anActual);
+        }
+
         Assert.assertArrayEquals(secondExpected, actual);
+
         actual = SortFactory.getSortByType("Radix").sort(secondArr);
+        for (int anActual : actual) {
+            System.out.println(anActual);
+        }
+
         Assert.assertArrayEquals(secondExpected, actual);
 
         int[] thirdExpected = {-3125, -625, -125, -25, -5};

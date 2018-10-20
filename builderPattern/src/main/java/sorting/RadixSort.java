@@ -1,39 +1,41 @@
 package sorting;
 
+import java.util.Arrays;
+
 public class RadixSort implements ISorting {
-    private int getMax(int arr[]) {
-        int max = arr[0];
-        for (int i = 1; i < arr.length; i++)
-            if (arr[i] > max)
-                max = arr[i];
-        return max;
+    public int[] sort(int[] unsortedArr) {
+        for (int place = 1; place <= 1000000000; place *= 10) {
+            unsortedArr = countingSort(unsortedArr, place);
+        }
+        return unsortedArr;
     }
 
-    public int[] sort(int arr[]) {
-        int divider = 1;
-        int mod = 10;
-        int[] output = new int[arr.length];
-        int maxDigits = String.valueOf(getMax(arr)).length();
-        for (int digit = 0; digit < maxDigits; digit++) {
-            int[] count = new int[10];
-            for (int i = 0; i < 10; i++) {
-                count[i] = 0;
-            }
-            for (int anArr : arr) {
-                int currentDigit = (anArr % mod) / divider;
-                ++count[digit];
-            }
-            for (int i = 1; i < 10; i++)
-                count[i] = count[i] + count[i - 1];
-            for (int i = arr.length - 1; i >= 0; i--) {
-                int currentDigit = (arr[i] % mod) / divider;
-                output[count[digit] - 1] = arr[i];
-                count[digit]--;
-            }
-            System.arraycopy(output, 0, arr, 0, arr.length);
-            mod = mod * 10;
-            divider = divider * 10;
+    private static int[] countingSort(int[] input, int place) {
+        int[] out = new int[input.length];
+
+        int[] count = new int[10];
+
+        for (int i = 0; i < input.length; i++) {
+            int digit = getDigit(input[i], place);
+            count[digit] += 1;
         }
-        return output;
+
+        for (int i = 1; i < count.length; i++) {
+            count[i] += count[i - 1];
+        }
+
+        for (int i = input.length - 1; i >= 0; i--) {
+            int digit = getDigit(input[i], place);
+
+            out[count[digit] - 1] = input[i];
+            count[digit]--;
+        }
+
+        return out;
+
+    }
+
+    private static int getDigit(int value, int digitPlace) {
+        return ((value / digitPlace) % 10);
     }
 }

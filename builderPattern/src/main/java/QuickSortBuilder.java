@@ -7,37 +7,41 @@ import java.util.List;
 
 public class QuickSortBuilder implements SequenceBuilder {
     private List<Integer[]> listOfArrays;
-    private static int lengthOfSubsequences;
+    private int lengthOfSubsequences;
 
-    public void setLengthOfSubsequences() {
-        lengthOfSubsequences = Double.valueOf(Math.random() * 10 + 1).intValue();
+    @Override
+    public void setLengthOfSubsequences(int length) {
+        lengthOfSubsequences = length;
     }
 
-    public void generateSubsequence(int index) {
-        Integer[] subsequence = new Integer[lengthOfSubsequences];
-        for (int i = 0; i < lengthOfSubsequences; i++) {
-            subsequence[i] = Double.valueOf(Math.random() * 20 - 20).intValue();
-        }
-        listOfArrays.set(index, subsequence);
-    }
-
-    public void sortSubsequence(int index) {
-        ISorting sortingAlgorithm = new QuickSort();
-        int[] subseq = Arrays.stream(listOfArrays.get(index)).mapToInt(a -> a).toArray();
-        sortingAlgorithm.sort(subseq);
-        Integer[] subsequence = listOfArrays.get(index);
-        for (int i = 0; i < subseq.length; i++) {
-            subsequence[i] = subseq[i];
-        }
-    }
-
-    public Sequence construct() {
-        setLengthOfSubsequences();
+    public void generateSequence() {
+        Integer[] subsequence;
         listOfArrays = new ArrayList<>(lengthOfSubsequences);
         for (int i = 0; i < lengthOfSubsequences; i++) {
-            generateSubsequence(i);
-            sortSubsequence(i);
+            listOfArrays.add(subsequence = new Integer[lengthOfSubsequences]);
+            for (int j = 0; j < lengthOfSubsequences; j++) {
+                subsequence[j] = Double.valueOf(Math.random() * 20).intValue();
+            }
         }
-        return new Sequence(listOfArrays, lengthOfSubsequences);
+    }
+
+    public void sortSequence() {
+        ISorting sortingAlgorithm = new QuickSort();
+        for (int i = 0; i < lengthOfSubsequences; i++) {
+            int[] subseq = Arrays.stream(listOfArrays.get(i)).mapToInt(a -> a).toArray();
+            sortingAlgorithm.sort(subseq);
+            Integer[] subsequence = listOfArrays.get(i);
+            for (int j = 0; j < subseq.length; j++) {
+                subsequence[j] = subseq[j];
+            }
+        }
+    }
+
+    public Sequence getResult() {
+        if (listOfArrays != null && lengthOfSubsequences != 0) {
+            return new Sequence(listOfArrays, lengthOfSubsequences);
+        } else {
+            throw new IllegalArgumentException("Parameters unset");
+        }
     }
 }
